@@ -26,7 +26,6 @@ void fit_v1(){
         "2.0"
     };
     
-    
     int counter = (sizeof(jt)/sizeof(*jt));
     int bin_counter = (sizeof(eta)/sizeof(*eta));
     
@@ -67,11 +66,8 @@ void fit_v1(){
     TFile * MC_file = new TFile("output-MC-2a.root");
     
     for (int i=0; i<bin_counter-1; i++) { //bin_counter-1
-        
         for (int j=0; j<counter-1; j++) { //counter-1
-        	
-            
-            
+        
             h_mass[j] = (TH1F*) file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] + "/jt"+ jt[j+1]+ "/hdjmass");
             h_mass_ref[j] = (TH1F*) file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] + "/jt"+ jt[j]+ "/hdjmass");
             	
@@ -104,7 +100,6 @@ void fit_v1(){
             
             turn_on[i][j] = f1[j]->GetX(0.99);
             
-            
             //Lines from point to each axis
             TLine *line_h = new TLine(0.,1.,2700.,1.);
             line_h->SetLineColor(kBlack);
@@ -129,12 +124,8 @@ void fit_v1(){
             
             h_mass[j]->Delete();
 	      	h_mass_ref[j]->Delete();
-            
-//            c1->Close();
-            
-
-            
-            /// Cutting out the left side of Turn-on Points and MERGING!!! //////
+        
+//            Cutting out the left side of Turn-on Points and MERGING!!! //////
             
             h_trig_uncut[i] = (TH1F*) file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] + "/jt"+ jt[0]+ "/hdjmass"); // uncut jet40 histo
             h_trig_cut[j] = (TH1F*) file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] + "/jt"+ jt[j+1]+ "/hdjmass");
@@ -147,7 +138,6 @@ void fit_v1(){
             int ncellsMC = h_mc[i]->GetSize();  // it adds underflow and overflow bins so I have to extract those
             int MC_NBins = ncellsMC-2;
             
-            //cout << "Mc Bins: " << MC_NBins << " DAta bins: " << Data_NBins << endl;
             double xmin = 1000000, xmax = 0;
             double ymin = 0.;
             double ymax = 0.;
@@ -189,7 +179,7 @@ void fit_v1(){
             
             h_trig_uncut[i]->Add(h_trig_cut[j]);
 
-//            -----------------------------------------------------------------------------
+//            --------------------------RunFLateGH---------------------------------------------------
             
             c2->cd();
             
@@ -216,15 +206,11 @@ void fit_v1(){
            	line_h_part2->SetLineWidth(1);
             line_h_part2->Draw();
             
-            
-
-            
             TLine *line_v_part2 = new TLine(f1_part2[j]->GetX(0.99), 0., f1_part2[j]->GetX(0.99), 1.);
             line_v_part2->SetLineColor(kBlack);
             line_v_part2->SetLineStyle(2);
             line_v_part2->SetLineWidth(1);
             line_v_part2->Draw();
-            
             
             //Latex
             TLatex l_part2;
@@ -237,21 +223,12 @@ void fit_v1(){
             
             h_mass_part2[j]->Delete();
             h_mass_ref_part2[j]->Delete();
-            
-//            c2->Close();
-//
+
             h_trig_uncut_part2[i] = (TH1F*) file_part2->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] + "/jt"+ jt[0]+ "/hdjmass"); // uncut jet40 histo
             h_trig_cut_part2[j] = (TH1F*) file_part2->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] + "/jt"+ jt[j+1]+ "/hdjmass");
             
-//            h_mc[i] = (TH1F*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] + "/mc"+"/hdjmass");
-            
             int ncells_part2 = h_trig_cut_part2[j]->GetSize();  // it adds underflow and overflow bins so I have to extract those
             int Data_NBins_part2 = ncells_part2-2;
-            
-//            int ncellsMC = h_mc[i]->GetSize();  // it adds underflow and overflow bins so I have to extract those
-//            int MC_NBins = ncellsMC-2;
-            
-            //cout << "Mc Bins: " << MC_NBins << " DAta bins: " << Data_NBins << endl;
             
             double xmin_part2 = 1000000, xmax_part2 = 0;
             double ymin_part2 = 0.;
@@ -259,10 +236,7 @@ void fit_v1(){
             
             for (int m=1; m<=Data_NBins_part2; m++) {
                
-
                 double Xaxis_val_part2 = h_trig_cut_part2[j]->GetBinCenter(m);
-//                double Xaxis_val2_part2 = h_mc[i]->GetBinCenter(k);
-                
                 double check_bins_part2 = h_trig_uncut_part2[i]->GetBinContent(m);
                 
                 if (check_bins_part2!=0) {
@@ -273,7 +247,6 @@ void fit_v1(){
                     if (m > xmax_part2) {xmax_part2 = m; ymax_part2 = Xaxis_data_part2;}
                 }
                 
-                                 
                 int binmax_part2 = h_trig_uncut_part2[i]->GetMaximumBin();
                 double x_part2 = h_trig_uncut_part2[i]->GetXaxis()->GetBinCenter(binmax_part2);
                 
@@ -289,11 +262,8 @@ void fit_v1(){
             
             h_trig_uncut_part2[i]->Add(h_trig_cut_part2[j]);
             
-            
-            cout << endl << endl << "ymin_part2: " << ymin_part2 << "ymin: " << ymin <<  endl << endl;
             gStyle->SetOptStat(0);
             gStyle->SetOptTitle(0);
-            
             
             if (j==6){
                 
@@ -315,13 +285,6 @@ void fit_v1(){
                 pad1-> SetLogy();
                 pad1-> SetLogx();
                 pad1->cd();
-                
-                
-//                if (ymin < ymin_part2) {
-//                    h_mc[i]->GetXaxis()->SetRangeUser(ymin,6500);
-//                } else {
-//                    h_mc[i]->GetXaxis()->SetRangeUser(ymin_part2,6500);
-//                }
                 
                 h_mc[i]->GetXaxis()->SetRangeUser(ymin_part2,6500);
                 h_mc[i]->GetXaxis()->SetLabelOffset(999);
@@ -355,7 +318,6 @@ void fit_v1(){
                 h_trig_uncut[i]->Draw("SAME");
                 h_trig_uncut_part2[i]->Draw("SAME");
                 
-                
                 TLegend *leg = new TLegend(0.6502504,0.6685714,0.7520868,0.8889796,NULL,"brNDC");
                 leg->SetBorderSize(0);
                 leg->SetTextFont(42);
@@ -387,33 +349,22 @@ void fit_v1(){
                 h_Ratio[i]->Divide(h_trig_uncut[i]);
                 h_Ratio_part2[i]->Divide(h_trig_uncut_part2[i]);
                 
-                //cosmetics
-//                if (ymin < ymin_part2) {
-//                    h_Ratio[i]->GetXaxis()->SetRangeUser(ymin,6500);
-//                } else {
-//                    h_Ratio[i]->GetXaxis()->SetRangeUser(ymin_part2,6500);
-//                }
                 h_Ratio[i]->GetXaxis()->SetRangeUser(ymin_part2,6500);
                 h_Ratio[i]->SetXTitle("M_{ij} (GeV)");
                 h_Ratio[i]->SetYTitle("MC/Data");
                 h_Ratio[i]->GetYaxis()->SetTitleOffset(0.8);
                 h_Ratio[i]->GetYaxis()->CenterTitle();
                 h_Ratio[i]->GetYaxis()->SetNdivisions(511);
-                //h_Ratio[i]->SetMarkerStyle(8);
-                //h_Ratio[i]->SetMarkerSize(1.0);
                 h_Ratio[i]->SetMarkerColor(kBlue);
                 h_Ratio[i]->SetLineColor(kBlue);
                 h_Ratio[i]->SetLineWidth(2);
-                //h_Ratio->GetXaxis()->SetRangeUser(0.,1.);
                 h_Ratio[i]->GetYaxis()->SetRangeUser(0.5,1.5);
-                
                 h_Ratio[i]->GetYaxis()->SetNdivisions(505);
                 h_Ratio[i]->GetYaxis()->SetTitleSize(0.11);
                 h_Ratio[i]->GetYaxis()->SetTitleFont(42);
                 h_Ratio[i]->GetYaxis()->SetTitleOffset(0.35);
                 h_Ratio[i]->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
                 h_Ratio[i]->GetYaxis()->SetLabelSize(18);
-                
                 h_Ratio[i]->GetXaxis()->SetMoreLogLabels(); //to make the x-axis a bit easier to read and see where the axis starts.
                 h_Ratio[i]->GetXaxis()->SetNoExponent(); //to make the x-axis a bit easier to read and see where the axis starts.
                 h_Ratio[i]->GetXaxis()->SetTitleSize(0.11);
@@ -426,13 +377,11 @@ void fit_v1(){
                 h_Ratio_part2[i]->SetLineColor(kRed);
                 h_Ratio_part2[i]->SetLineWidth(2);
 
-                
                 h_Ratio[i]->Draw("E1HIST");
                 h_Ratio_part2[i]->Draw("E1HISTSAME");
                 
                 c3->SaveAs("Merged"+ eta[i] + "-" + eta[i+1]+ "-" +jt[j+1]+".png");
             } //j==6
-		
             h_trig_cut[j]->Delete();
             h_trig_cut_part2[j]->Delete();
         }//j
