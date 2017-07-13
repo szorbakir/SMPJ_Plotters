@@ -38,6 +38,7 @@ void rawMassMerged(){
     
     int bin_counter = (sizeof(eta_bins)/sizeof(*eta_bins));
     int counter = (sizeof(jt)/sizeof(*jt));
+    
     //////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////// Raw Dijet Mass merged plots /////////////////////
     //////////////////////////////////////////////////////////////////////////////////
@@ -50,8 +51,6 @@ void rawMassMerged(){
             DATAFile -> cd("Standard/Eta_" + eta_bins[i] + "-" + eta_bins[i+1] + "/jt" + jt[j] + "/");
             h_RAWdjmass[j] = (TH1F*)gDirectory->FindObjectAny("hdjmass");
             
-            
-            
             //Draw raw dijetMasss of jt40 histogram
             if(j == 0){
                 h_RAWdjmass[0] = (TH1F*)gDirectory->FindObjectAny("hdjmass");
@@ -63,18 +62,16 @@ void rawMassMerged(){
                 h_RAWdjmass[0]->SetMinimum(1e-6);
                 h_RAWdjmass[0]->GetXaxis()->SetTitleOffset(1.2);
                 h_RAWdjmass[0]->Draw("hist");
-                //h_RAWdjmass[0]->SetTitle("#bf{CMS} Preliminary                              #sqrt{s} = 13 TeV 16.5 fb^{-1}");
-                //h_RAWdjmass[0]->GetTitleAlign(33);
-                //leg->AddEntry(h_RAWdjmass[0],"HLT_PFJet40","l");
             }
+           
             //add other entries to TLegend
             h_RAWdjmass[j] = (TH1F*)gDirectory->FindObjectAny("hdjmass");
             h_RAWdjmass[j]->SetLineColor(j+1);
+            
             if (j == 2) h_RAWdjmass[j]->SetLineColor(kSpring+5);
             if (j == 4) h_RAWdjmass[j]->SetLineColor(kOrange);
             if (j == 6) h_RAWdjmass[j]->SetLineColor(kCyan+1);
             if (j == 7) h_RAWdjmass[j]->SetLineColor(kGreen-2);
-            //h_RAWdjmass[j]->GetXaxis()->SetRangeUser(0, 4500.);
             
             //Draw raw dijetMass of jt>40 histograms on the same canvas with jt40
             if (j>0) h_RAWdjmass[j]->Draw("hist same");
@@ -90,10 +87,6 @@ void rawMassMerged(){
         TLatex ltitle;
         ltitle.SetTextSize(0.04);
         ltitle.DrawLatex(10.1288, 434749, "CMS #bf{Preliminary}");
-        
-        //TLatex ltitle2;
-        //ltitle2.SetTextSize(0.035);
-        //ltitle2.DrawLatex(487.923, 434749, "16.5 fb^{-1}  #sqrt{s} = 13 TeV");
         
         TLatex lt;
         lt.SetTextSize(0.025);
@@ -112,6 +105,7 @@ void rawMassMerged(){
     /////////////////////////////////////////////////////////////////////
     //get Turn-On point values wrt corresponding HLT_PFJet
     /////////////////////////////////////////////////////////////////////
+    
     double turnOn[4][7];
     TString etaJet[4][7];
     float a[4][7];
@@ -144,11 +138,10 @@ void rawMassMerged(){
             h_djmass[j]->GetXaxis()->SetTitleOffset(1.2);
             h_djmass[j]->Draw();
             
-            //cout << i << endl;
-            
             //"a" the fit parameter optimisation
             //double a=1.75;
             a[i][j]=1.75;
+            
             if (i == 1 && j == 6) a[i][j] = 2.0;
             if (i == 2) a[i][j] = 2.0;
             if ((i == 2) && j == 2) a[i][j] = 2.5;
@@ -172,9 +165,6 @@ void rawMassMerged(){
             turnOn[i][j] = f1->GetX(0.99);
             bbbb = (TString) ("eta_"+eta_bins[i]+"-"+eta_bins[i+1]+"_jt"+jt[j+1]+"/jt"+jt[j]);
             etaJet[i][j] = bbbb;
-            //cout << foo[j-1]<< endl;
-            
-            
             
             //Lines from point to each axis
             TLine *line_h = new TLine(0.,1.,2700.,1.);
@@ -196,28 +186,8 @@ void rawMassMerged(){
             l.DrawLatex(1320.114,0.296371,Form("TurnOn Point = %f",f1->GetX(0.99)));
             l.DrawLatex(1320.114,0.371371,Form("%s, %s"+jt[j+1],"jt"));
             l.DrawLatex(1320.114,0.441533,Form(eta_bins[i] + "%s" + eta_bins[i+1]," < #||{#eta} < "));
-
-//            c2->SaveAs("eta_" + eta_bins[i] + "-" + eta_bins[i+1] + "_jt"+jt[j+1] + "_.png");
             
-            //cout turnOn value, fit parameter optimisation parameter, etc...information etaBYeta
-//            if (j==6){
-//                for (int n=0; n<7; n++) {
-//                    cout << etaJet[i][n] << " TurnOn point = " << turnOn[i][n]<< "  a value = " << a << endl;
-//                }
-//            }
-            
-        }// j of turON loop
-        
-//        //cout turnOn value, fit parameter optimisation parameter, etc...information etaBYeta at the end together
-//        if (i==3) {
-//            for (int n=0; n<4; n++) {
-//                for (int m=0; m<7; m++) {
-//                    cout << etaJet[n][m] << " TurnOn point = " << turnOn[n][m]<< " a =" << a[n][m] << endl;
-//                    
-//                }
-//            }
-//        }
-        
+        }// j of TurnOn loop
     }// i of TurnOn plots
     
     /////////////////////////////////////////////////////////////////////
@@ -248,13 +218,7 @@ void rawMassMerged(){
                 double check_err  = h_djmassCut[j]->GetBinError(k);
                 
                 if (check_bins != 0){
-//                    if ((j==0) &&
-//                        ((h_djmassCut[0]->GetBinContent(k)<h_djmassCut[0]->GetBinContent(k+1)) ||
-//                        h_djmassCut[0]->GetBinContent(k)<h_djmassCut[0]->GetBinContent(k+5))){
-//                        h_djmassCut[0]->SetBinContent(k, 0.);
-//                        h_djmassCut[0]->SetBinError(k, 0.);
-//                    }
-                    
+
                     double Xaxis_val = h_djmassCut[0]->GetBinCenter(k);
                     int binmax = h_djmassCut[0]->GetMaximumBin();
                     x = h_djmassCut[0]->GetXaxis()->GetBinCenter(binmax);
@@ -264,25 +228,17 @@ void rawMassMerged(){
                         h_djmassCut[0]->SetBinError(k,0);
                     }
 
-                    
                     if ((k<h_djmassCut[j]->GetXaxis()->FindBin(turnOn[i][j-1])) && (j>0)){
                         
                         h_djmassCut[j]->SetBinContent(k, 0.);
                         h_djmassCut[j]->SetBinError(k, 0.);
-                        
-                       
                     }//cut leftside >jt40
-                    
                     
                     if ((k>=h_djmassCut[j]->GetXaxis()->FindBin(turnOn[i][j])) && (j<7)){
                         
                         h_djmassCut[j]->SetBinContent(k, 0.);
                         h_djmassCut[j]->SetBinError(k, 0.);
-                        
                     }//cut right side <jt40
-
-                    
-                    
                 }//check bin
             }//k
             
@@ -300,29 +256,23 @@ void rawMassMerged(){
                 h_djmassCut[0]->GetXaxis()->SetMoreLogLabels(); //to make the x-axis a bit easier to read and see where the axis starts.
                 h_djmassCut[0]->GetXaxis()->SetNoExponent();
                 h_djmassCut[0]->Draw();
-                //h_RAWdjmass[0]->SetTitle("#bf{CMS} Preliminary                              #sqrt{s} = 13 TeV 16.5 fb^{-1}");
-                //h_RAWdjmass[0]->GetTitleAlign(33);
-                //leg->AddEntry(h_RAWdjmass[0],"HLT_PFJet40","l");
             }
+            
             //add other entries to TLegend
             h_djmassCut[j] = (TH1F*)gDirectory->FindObjectAny("hdjmass");
             h_djmassCut[j]->SetLineColor(j+1);
-//            h_djmassCut[j]->SetLineColor(j+1);
             if (j == 2) h_djmassCut[j]->SetLineColor(kSpring+5);
             if (j == 4) h_djmassCut[j]->SetLineColor(kOrange);
             if (j == 6) h_djmassCut[j]->SetLineColor(kCyan+1);
             if (j == 7) h_djmassCut[j]->SetLineColor(kGreen-2);
-            //h_RAWdjmass[j]->GetXaxis()->SetRangeUser(0, 4500.);
-            h_djmassCut[j]->SetLineWidth(2);
             
+            h_djmassCut[j]->SetLineWidth(2);
             
             //Draw raw dijetMass of jt>40 histograms on the same canvas with jt40
             if (j>0) h_djmassCut[j]->Draw("same");
             
             //TLegend Settings
             leg->AddEntry(h_djmassCut[j],"HLT_PFJet"+jt[j],"l");
-            
-            
         }//j of cut
         
         leg->Draw();
@@ -331,9 +281,7 @@ void rawMassMerged(){
         leg2->SetBorderSize(0);
         leg2->SetTextFont(42);
         leg2->SetTextSize(0.045);
-//        leg->AddEntry(h_MC_,"MC","l");
-        //            leg->AddEntry(h_DATA_part1_,"RunBCDEFearly, 19.49 fb^{-1}","lep");
-//        leg->AddEntry(h_Data_,"HLT_PFJet" + jt[j],"lep");
+
         leg2->AddEntry("","RunF_{late}GH 16.5 fb^{-1}","");
         leg2->AddEntry("","AK4chs Jets","");
         leg2->AddEntry("",eta_bins[i]+" < #eta < "+eta_bins[i+1],"");
@@ -346,22 +294,8 @@ void rawMassMerged(){
         t6->SetTextAlign(11);
         t6->DrawLatex(0.1,0.92,"CMS Internal, #sqrt{s}=13 TeV");
 
-//        //TLatex
-//        TLatex ltitle;
-//        ltitle.SetTextSize(0.04);
-//        ltitle.DrawLatex(10.1288, 434749, "CMS #bf{Preliminary}");
-//        
-//        TLatex lt;
-//        lt.SetTextSize(0.025);
-//        lt.DrawLatex(13.0079,30896.4,"#bf{RunF_{Late}GH}");
-//        lt.DrawLatex(13.0079,7733.95,eta_bins[i]+" < #eta < "+eta_bins[i+1]);
-//        lt.DrawLatex(13.0079,1600,"#bf{#sqrt{s} = 13 TeV 16.5 fb^{-1}}");
-//        lt.SetTextAlign(12);
-        
         c3->SaveAs("MassSpectrum_"+eta_bins[i]+"-"+eta_bins[i+1]+"_.png");
         c3->Update();
         leg->Clear(); //After listing one turn of eta clear legend otherwise all eta legends will be stacked together
     }//i of MassSpectrum after cutting right and left
 }
-
-
