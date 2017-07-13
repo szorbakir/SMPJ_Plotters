@@ -2,11 +2,8 @@
 #include "TFile.h"
 #include <string>
 #include <iostream>
-#include <stdio.h>      /* printf, fgets */
+#include <stdio.h>
 #include <stdlib.h>
-
-
-//degisim yapildi 
 
 void fraction_by_triggers(){
     
@@ -33,19 +30,14 @@ void fraction_by_triggers(){
         "4.7"
     };
     
-    
     int jt_counter = (sizeof(jt)/sizeof(*jt));
     int eta_counter = (sizeof(eta)/sizeof(*eta));
-    
-    cout << jt_counter << eta_counter << endl;
     
     Double_t w = 1200;
     Double_t h = 900;
     
     TH1F* h_Data_;
     TH1F* h_MC_;
-    THStack *hs = new THStack("hs","");
-
     
     TH1F* h_Ratio;
     
@@ -53,13 +45,10 @@ void fraction_by_triggers(){
     TCanvas * c2 = new TCanvas("c2", "c2", w, h);
     
     TFile * MC_file = new TFile("output-MC-2a.root");
-    TFile * Data_file = new TFile("output-DATA-2a.root");
-//    TFile * Data_file = new TFile("output-DATA_part1-2a.root");
-
+    TFile * Data_file = new TFile("output-DATA-2a.root"); // RunFlateGH // make the changes in TLegend if you change DATA version.
     
-    
-    for (int i=0; i< eta_counter -1; i++) { //eta_counter -1
-        for (int j=0; j<=jt_counter-1; j++) { //jt_counter-1
+    for (int i=0; i< eta_counter -1; i++) {
+        for (int j=0; j<=jt_counter-1; j++) {
             
             TString hname = (TString) ("Eta_" + eta[i] + "-" + eta[i+1] + "/jt"+ jt[j]+ "/hchf");
             TString eta_name = (TString) (eta[i] + " < #eta < " + eta[i+1]);
@@ -70,20 +59,15 @@ void fraction_by_triggers(){
             h_Data_->Scale(1/h_Data_->Integral());
             h_MC_->Scale(1/h_MC_->Integral());
             
-//            int binmax = h_Data_->GetMaximumBin();
-//            double x = h_Data_->GetXaxis()->GetBinCenter(binmax);
-            
-//            cout <<endl << x << endl;
-            
             h_Ratio = (TH1F*)h_MC_->Clone("h_Ratio");
             
-            //Cosmetics
-            
+            //Cosmetics for canvas
             gStyle->SetOptStat(0);
             gStyle->SetOptTitle(0);
             
             c1->cd();
             
+            // Upper plot with "same" option
             TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
             pad1->SetBottomMargin(0.012);
             pad1->Draw();
@@ -91,6 +75,7 @@ void fraction_by_triggers(){
 //            pad1-> SetLogx();
             pad1->cd();
             
+            //Cosmetics
             h_Data_ -> SetLineColor(kRed);
             h_Data_ -> SetLineWidth(1);
             h_Data_ -> SetMarkerColor(kRed);
@@ -118,10 +103,8 @@ void fraction_by_triggers(){
             leg->SetTextFont(42);
             leg->SetTextSize(0.045);
             leg->AddEntry(h_MC_,"MC, HLT_PFJet" + jt[j],"l");
-//            leg->AddEntry(h_DATA_part1_,"RunBCDEFearly, 19.49 fb^{-1}","lep");
             leg->AddEntry(h_Data_,"RunF_{Late}GH, HLT_PFJet" + jt[j],"lep");
 //            leg->AddEntry(h_Data_,"RunBCDEF_{Early}, HLT_PFJet" + jt[j],"lep");
-//            leg->AddEntry(""," 16.5 fb^{-1}","");
             leg->AddEntry("","AK4chs Jets","");
             leg->AddEntry("",eta_name,"");
             leg->Draw();
@@ -135,6 +118,7 @@ void fraction_by_triggers(){
             
             c1->cd();          // Go back to the main canvas before defining pad2
             
+            //Ratio Pad
             TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, 0.3);
             pad2->SetTopMargin(0.012);
             pad2->SetBottomMargin(0.28);
@@ -145,15 +129,14 @@ void fraction_by_triggers(){
             
             h_Ratio->Divide(h_Data_);
             
+            //Cosmetics
             h_Ratio->SetLineWidth(1);
             h_Ratio->SetXTitle("CH Fraction");
             h_Ratio->GetYaxis()->SetTitleOffset(0.8);
             h_Ratio->SetYTitle("MC/Data");
             h_Ratio->GetYaxis()->CenterTitle();
-            
             h_Ratio->SetMarkerColor(kRed);
             h_Ratio->SetLineColor(kRed);
-            
             h_Ratio->GetYaxis()->SetNdivisions(505);
             h_Ratio->GetXaxis()->SetNdivisions(511);
             h_Ratio->GetYaxis()->SetTitleSize(0.11);
@@ -161,33 +144,17 @@ void fraction_by_triggers(){
             h_Ratio->GetYaxis()->SetTitleOffset(0.35);
             h_Ratio->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
             h_Ratio->GetYaxis()->SetLabelSize(15);
-            
             h_Ratio->GetYaxis()->SetRangeUser(0.3,1.7);
-//            h_Ratio->GetXaxis()->SetMoreLogLabels(); //to make the x-axis a bit easier to read and see where the axis starts.
-//            h_Ratio->GetXaxis()->SetNoExponent(); //to make the x-axis a bit easier to read and see where the axis starts.
             h_Ratio->GetXaxis()->SetTitleSize(0.11);
             h_Ratio->GetXaxis()->SetTitleFont(42);
             h_Ratio->GetXaxis()->SetTitleOffset(1.1);
             h_Ratio->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
             h_Ratio->GetXaxis()->SetLabelSize(15);
             
+            h_Ratio->Draw("e1hist");
             
-            h_Ratio->Draw("E1HIST");
-            c1->SaveAs(eta[i] + "-" + eta[i+1] + "_"+ jt[j]+ "_hchf" + ".png"); //saving...
-            
-//           c2->cd();
-//            h_Data_ -> SetLineColor(j+1);
-//            hs->Add(h_Data_);
-//            
-////            hs->Add(h_MC_);
-////                        hs->SetFillStyle(1001);
-//            hs->Draw();
-////            c2->SaveAs(eta[i] + "-" + eta[i+1] + "_"+ jt[j]+ "_hchf_stack" + ".png"); //saving...
-////            hs->Update();
-            
-            
-            
+            //Saving...
+            c1->SaveAs(eta[i] + "-" + eta[i+1] + "_"+ jt[j]+ "_hchf" + ".png");
         }
-//        c2->SaveAs(eta[i] + "-" + eta[i+1] + "__hchf_stack" + ".png"); //saving...
     }
 }
