@@ -45,7 +45,7 @@ void fraction_by_triggers(){
     TCanvas * c2 = new TCanvas("c2", "c2", w, h);
     
     TFile * MC_file = new TFile("output-MC-2a.root");
-    TFile * Data_file = new TFile("output-DATA-2a.root"); // RunFlateGH // make the changes in TLegend if you change DATA version.
+    TFile * Data_file = new TFile("output-DATA-2a.root");
     
     for (int i=0; i< eta_counter -1; i++) {
         for (int j=0; j<=jt_counter-1; j++) {
