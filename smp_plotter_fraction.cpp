@@ -74,7 +74,6 @@ void smp_plotter_fraction(){
             DATAFile2 -> cd("Standard/Eta_" + eta_bins[j] + "-" + eta_bins[j+1]);
             h_DATA_part2_ = (TH1F*)gDirectory->FindObjectAny(observable[i]);
     
-            
             //Bin Removing
             int ncells = h_MC_->GetSize();  // it adds underflow and overflow bins so I have to extract those
             int MC_NBins = ncells-2;
@@ -96,11 +95,9 @@ void smp_plotter_fraction(){
             double Int_data_2 = (h_DATA_part2_->Integral());
             double Int_MC   = (h_MC_->Integral()); //Numbers are coming from the loop above...They corresponds to first and last bin of data///
             
-            
             h_DATA_part1_->Scale(1/Int_data);
             h_DATA_part2_->Scale(1/Int_data_2);
             h_MC_->Scale(1/Int_MC);
-            
             
             //Draw, cosmetics, etc.
             TCanvas * c1 = new TCanvas("c1", "c1", w, h);
@@ -120,10 +117,6 @@ void smp_plotter_fraction(){
             h_Ratio = (TH1F*)h_MC_->Clone("h_Ratio");
             h_Ratio_2 = (TH1F*)h_MC_->Clone("h_Ratio_2");
             
-           
-            
-           //h_DATA_part1_->GetXaxis()->SetRangeUser(0,1);
-           // h_DATA_part1_->SetMaximum(0.1);
             h_DATA_part1_->GetXaxis()->SetLabelOffset(999);
             h_DATA_part1_->GetXaxis()->SetLabelSize(0);
             h_DATA_part1_->GetYaxis()->SetNdivisions(505);
@@ -134,22 +127,18 @@ void smp_plotter_fraction(){
             h_DATA_part1_->GetYaxis()->SetLabelSize(20);
             h_DATA_part1_->SetMarkerColor(kBlue);
             h_DATA_part1_->SetMarkerStyle(20);
-//            h_DATA_part1_->SetMarkerSize(0.8);
             h_DATA_part1_->SetLineColor(kBlue);
             h_DATA_part1_->SetLineWidth(1);
             h_DATA_part1_->SetYTitle("A.U.");
             h_DATA_part1_->GetYaxis()->SetTitleOffset(0.8);
             h_DATA_part1_->GetYaxis()->SetTitleSize(0.05);
             h_DATA_part1_->GetYaxis()->SetTitleFont(42);
-//            h_DATA_part1_->SetXTitle(axis_name[i]);
             
             h_MC_->SetMarkerColor(kBlack);
-//            h_MC_->SetMarkerSize();
             h_MC_->SetLineColor(kBlack);
             h_MC_->SetLineWidth(1);
             
             h_DATA_part2_->SetMarkerColor(kRed);
-//            h_DATA_part2_->SetMarkerSize(0.8);
             h_DATA_part2_->SetLineColor(kRed);
             h_DATA_part2_->SetLineWidth(1);
             h_DATA_part2_->SetMarkerStyle(22);
@@ -158,32 +147,6 @@ void smp_plotter_fraction(){
             h_DATA_part1_->Draw("E1HIST");
             h_MC_->Draw("E1HIST SAME");
             h_DATA_part2_->Draw("E1HIST SAME");
-            
-           /* //h_MC_->GetXaxis()->SetRangeUser(0,1);
-            h_MC_->GetXaxis()->SetLabelOffset(999);
-            h_MC_->GetXaxis()->SetLabelSize(0);
-            h_MC_->GetYaxis()->SetNdivisions(505);
-            h_MC_->GetYaxis()->SetNdivisions(505);
-            h_MC_->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-            h_MC_->GetXaxis()->SetLabelSize(20);
-            h_MC_->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-            h_MC_->GetYaxis()->SetLabelSize(20);
-            
-            
-            h_MC_->SetMarkerColor(1);
-            h_MC_->SetMarkerStyle(20);
-            
-            h_MC_->SetLineColor(1);
-            
-            h_MC_->SetLineWidth(1);
-            h_MC_->SetYTitle("A.U.");
-            h_MC_->GetYaxis()->SetTitleOffset(0.8);
-            h_MC_->GetYaxis()->SetTitleSize(0.05);
-            h_MC_->GetYaxis()->SetTitleFont(42);
-            
-            h_MC_->SetYTitle(axis_name[i]);
-    
-            h_MC_->Draw("E1HIST");*/
             
             if (observable[i] == "hchf") {
                 TLegend *leg = new TLegend(0.3060601,0.1089862,0.4079967,0.3001843,NULL,"brNDC");
@@ -217,13 +180,6 @@ void smp_plotter_fraction(){
     	    t6->SetTextAlign(11);
             t6->DrawLatex(0.1,0.92,"#bf{CMS} Preliminary, #sqrt{s}=13 TeV");
             
-            /*TLatex *t7 = new TLatex();
-            t7->SetNDC();
-            t7->SetTextFont(42);
-    	    t7->SetTextSize(0.05);
-    	    t7->SetTextAlign(11);
-            t7->DrawLatex(0.685,0.92,"#sqrt{s}=13 TeV 12.6101 fb^{-1}");*/
-            
             c1->cd();          // Go back to the main canvas before defining pad2
    	
             TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, 0.3);
@@ -234,25 +190,17 @@ void smp_plotter_fraction(){
             pad2->Draw();
             pad2->cd();       // pad2 becomes the current pad
             
-    
-    
             h_Ratio->Divide(h_DATA_part1_);
             h_Ratio_2->Divide(h_DATA_part2_);
     
-            //cosmetics
-            
-            //h_Ratio->GetXaxis()->SetRangeUser(0,1);
+            //Cosmetics
             h_Ratio->SetLineWidth(1);
             h_Ratio->SetXTitle(axis_name[i]);
             h_Ratio->GetYaxis()->SetTitleOffset(0.8);
             h_Ratio->SetYTitle("MC/Data");
             h_Ratio->GetYaxis()->CenterTitle();
-            //h_Ratio->SetMarkerStyle(8);
-            //h_Ratio->SetMarkerSize(1.0);
             h_Ratio->SetMarkerColor(kBlue);
             h_Ratio->SetLineColor(kBlue);
-            //h_Ratio->GetXaxis()->SetRangeUser(0.,1.);
-            
             h_Ratio->GetYaxis()->SetNdivisions(505);
             h_Ratio->GetXaxis()->SetNdivisions(511);
             h_Ratio->GetYaxis()->SetTitleSize(0.11);
@@ -260,7 +208,6 @@ void smp_plotter_fraction(){
             h_Ratio->GetYaxis()->SetTitleOffset(0.35);
             h_Ratio->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
             h_Ratio->GetYaxis()->SetLabelSize(15);
-	
             h_Ratio->GetYaxis()->SetRangeUser(0.3,1.7);
             h_Ratio->GetXaxis()->SetMoreLogLabels(); //to make the x-axis a bit easier to read and see where the axis starts.
     	    h_Ratio->GetXaxis()->SetNoExponent(); //to make the x-axis a bit easier to read and see where the axis starts.
@@ -279,7 +226,7 @@ void smp_plotter_fraction(){
             h_Ratio->Draw("E1HIST");
             h_Ratio_2->Draw("E1HIST SAME");
    
-            c1->SaveAs(hname + ".pdf"); //saving...
+            c1->SaveAs(hname + ".png"); //saving...
             c1->Update();
         }
     }
