@@ -33,8 +33,6 @@ void smp_plotter_pt(){
     TString inputFile2;
     TString inputFile3;
     
-    //int bin_holder[10000];
-    
     Double_t w = 1200;
     Double_t h = 900;
     Double_t norm = 1;
@@ -53,14 +51,12 @@ void smp_plotter_pt(){
     inputFile2.Form("output-RunBtoFearly-2b.root");
     inputFile3.Form("output-RunFlatetoH-2b.root");
     
-    
     int counter = (sizeof(observable)/sizeof(*observable));
     int bin_counter = (sizeof(eta_bins)/sizeof(*eta_bins));
     
     
     for (int j=0; j<bin_counter-1; j++) { 
-        
-        for (int i=0; i<counter; i++) { 
+        for (int i=0; i<counter; i++) {
         
             TString hname = (TString) (observable[i]+"_"+eta_bins[j] + "-" + eta_bins[j+1]); //Kisaltmalari ogren ve ona gore string array olustur...
             TString eta_name = (TString) (eta_bins[j] + " < #eta < " + eta_bins[j+1]);
@@ -79,8 +75,6 @@ void smp_plotter_pt(){
             DATAFile2 -> cd("Standard/Eta_" + eta_bins[j] + "-" + eta_bins[j+1]);
             h_part2_DATA_ = (TH1F*)gDirectory->FindObjectAny(observable[i]);
             
-//            cout << "asdqwdwdqwdqwd" << endl;
-            
             double xmin = 1000000, xmax = 0;
             double ymin = 0.;
             double ymax = 0.;
@@ -98,14 +92,11 @@ void smp_plotter_pt(){
                     
                     if (k < xmin) {xmin = k; ymin = Xaxis_data;}
                     if (k > xmax) {xmax = k; ymax = Xaxis_data;}
-                    
-                }
+                    }
             }
             
             // Basic Scaling ////
-            
             double Int_data = (h_part1_DATA_->Integral());
-            //double Int_data_2 = (h_part2_DATA_->Integral());
             double Int_MC   = (h_MC_->Integral(xmin,xmax)); //Numbers are coming from the loop above...They corresponds to first and last bin of data///
             double Int_data_2 = (h_part2_DATA_->Integral(xmin,xmax));
             
@@ -118,9 +109,6 @@ void smp_plotter_pt(){
             //End of scaling //
             
             //Draw, cosmetics, etc.
-    
-            
-    
             gStyle->SetOptStat(0);
             gStyle->SetOptTitle(0);
     
@@ -138,7 +126,6 @@ void smp_plotter_pt(){
 
             h_MC_->GetXaxis()->SetRangeUser(ymin,2500);
             h_MC_->GetXaxis()->SetLabelOffset(999);
-            //h_MC_->GetXaxis()->SetLabelSize(0);
             h_MC_->GetYaxis()->SetNdivisions(505);
             h_MC_->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
             h_MC_->GetXaxis()->SetLabelSize(20);
@@ -152,8 +139,6 @@ void smp_plotter_pt(){
             h_MC_->GetYaxis()->SetTitleSize(0.05);
             h_MC_->GetYaxis()->SetTitleFont(42);
 
-
-            
             h_part1_DATA_->SetMarkerColor(kBlue);
             h_part1_DATA_->SetMarkerStyle(20);
             h_part1_DATA_->SetLineColor(kBlue);
@@ -180,31 +165,12 @@ void smp_plotter_pt(){
             leg->AddEntry("",eta_name,"");
             leg->Draw();
             
-            /*TLegend *leg2 = new TLegend(0.1519199,0.1362126,0.3105175,0.3115541,NULL,"brNDC");
-            leg2->SetBorderSize(0);
-            leg2->SetTextFont(42);
-            leg2->SetTextSize(0.045);
-            leg2->AddEntry("","AK4chs Jets","");
-            leg2->AddEntry("",eta_name,"");
-            leg2->AddEntry("","RunBCDEFG","");
-            leg2->Draw();*/
-            
-            
-    
             TLatex *t6 = new TLatex();
             t6->SetNDC();
             t6->SetTextFont(42);
     	    t6->SetTextSize(0.05);
     	    t6->SetTextAlign(11);
             t6->DrawLatex(0.1,0.92,"CMS Internal, #sqrt{s}=13 TeV");
-            
-            /*TLatex *t7 = new TLatex();
-            t7->SetNDC();
-            t7->SetTextFont(42);
-    	    t7->SetTextSize(0.05);
-    	    t7->SetTextAlign(11);
-            t7->DrawLatex(0.685,0.92,"#sqrt{s}=13 TeV");*/
-           
             
             c1->cd();          // Go back to the main canvas before defining pad2
    	
@@ -216,10 +182,8 @@ void smp_plotter_pt(){
             pad2->cd();       // pad2 becomes the current pad
             gPad-> SetLogx();
     
-            h_Ratio_2->Divide(h_part2_DATA_);
-
             h_Ratio->Divide(h_part1_DATA_);
-            
+            h_Ratio_2->Divide(h_part2_DATA_);
             
             //cosmetics
             h_Ratio->GetXaxis()->SetRangeUser(ymin,2500);
@@ -228,21 +192,16 @@ void smp_plotter_pt(){
             h_Ratio->GetYaxis()->SetTitleOffset(0.8);
             h_Ratio->GetYaxis()->CenterTitle();
             h_Ratio->GetYaxis()->SetNdivisions(511);
-            //h_Ratio->SetMarkerStyle(8);
-            //h_Ratio->SetMarkerSize(1.0);
             h_Ratio->SetMarkerColor(kBlue);
             h_Ratio->SetLineColor(kBlue);
             h_Ratio->SetLineWidth(1);
-            //h_Ratio->GetXaxis()->SetRangeUser(0.,1.);
             h_Ratio->GetYaxis()->SetRangeUser(0.5,1.5);
-            
             h_Ratio->GetYaxis()->SetNdivisions(505);
             h_Ratio->GetYaxis()->SetTitleSize(0.11);
             h_Ratio->GetYaxis()->SetTitleFont(42);
             h_Ratio->GetYaxis()->SetTitleOffset(0.35);
             h_Ratio->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
             h_Ratio->GetYaxis()->SetLabelSize(18);
-	
             h_Ratio->GetXaxis()->SetMoreLogLabels(); //to make the x-axis a bit easier to read and see where the axis starts.
     	    h_Ratio->GetXaxis()->SetNoExponent(); //to make the x-axis a bit easier to read and see where the axis starts.
             h_Ratio->GetXaxis()->SetTitleSize(0.11);
@@ -255,10 +214,6 @@ void smp_plotter_pt(){
             h_Ratio_2->SetLineColor(kRed);
             h_Ratio_2->SetLineWidth(1);
 
-            
-            
-            
-            
             h_Ratio->Draw("E1HIST");
             h_Ratio_2->Draw("E1HIST SAME");
     
