@@ -1,9 +1,17 @@
 # SMPJ_Plotters
 Various source codes to plot histograms from SMP-J official NTuples.
 
-General Notes;
+General notes;
     Please use the last version of ROOT.
     These source codes can be used both locally and on LXPLUS.
+    If you change the Data versions do not forget Legends :)
+
+Future updates;
+    Automaticly  change Legend when Data version is changed.
+    Bash script to run all source code with one command line.
+
+How to use;
+    Basically do "root -l -b -q <X.cpp>"
 
 ---rawMassMerged.cpp---
 Source code use only one Data version.First, change the Data version to one you want to use. Data version should be "normalized".
