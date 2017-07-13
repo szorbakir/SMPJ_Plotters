@@ -5,6 +5,9 @@
 #include <stdio.h>      /* printf, fgets */
 #include <stdlib.h>
 
+
+//degisim 
+
 void fraction_by_triggers(){
     
     TString jt[] = {
