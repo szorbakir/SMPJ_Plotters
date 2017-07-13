@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 
-//degisim 
+//degisim yapildi 
 
 void fraction_by_triggers(){
     
