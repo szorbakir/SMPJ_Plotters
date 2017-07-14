@@ -238,7 +238,7 @@ void rawMassMerged(){
                         
                         h_djmassCut[j]->SetBinContent(k, 0.);
                         h_djmassCut[j]->SetBinError(k, 0.);
-                    }//cut right side <jt40
+                    }//cut right side <jt450
                 }//check bin
             }//k
             
