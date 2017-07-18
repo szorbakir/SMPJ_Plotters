@@ -2,6 +2,13 @@
 
 void rawMassMerged(){
     
+    int choice;
+    
+    cout << "Which DATA version? Please SELECT..." << endl;
+    cout << "1. RunBCDEFearly" << endl;
+    cout << "2. RunFlateGH" << endl;
+    cin >> choice;
+    
     TString eta_bins[]  = {"0.0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.2", "4.7"};
     TString jt[]        = {"40", "80", "140", "200", "260", "320", "400", "450"};
     
@@ -17,7 +24,6 @@ void rawMassMerged(){
     c1->SetTickx(1);
     c1->SetTicky(1);
     
-    
     TLegend *leg = new TLegend(0.6994992,0.6619355,0.8731219,0.8722581);
     leg->SetBorderSize(0);
     leg->SetLineColor(0);
@@ -26,7 +32,6 @@ void rawMassMerged(){
     leg->SetFillColor(0);
     leg->SetFillStyle(1001);
     
-    
     TString inputFile1;
     inputFile1.Form("output-DATA_part2-2a.root");
     
@@ -34,7 +39,6 @@ void rawMassMerged(){
     TH1F *h_djmassRef[8];
     TH1F *h_djmass[8]   ;
     TH1F *h_djmassCut[8];
-    
     
     int bin_counter = (sizeof(eta_bins)/sizeof(*eta_bins));
     int counter = (sizeof(jt)/sizeof(*jt));
@@ -83,17 +87,32 @@ void rawMassMerged(){
         
         leg->Draw();
         
-        //TLatex
-        TLatex ltitle;
-        ltitle.SetTextSize(0.04);
-        ltitle.DrawLatex(10.1288, 434749, "CMS #bf{Preliminary}");
+        TLatex *t6 = new TLatex();
+        t6->SetNDC();
+        t6->SetTextFont(42);
+        t6->SetTextSize(0.035);
+        t6->SetTextAlign(11);
+        t6->DrawLatex(0.1,0.92,"#bf{CMS} Preliminary, #sqrt{s}=13 TeV");
         
-        TLatex lt;
-        lt.SetTextSize(0.025);
-        lt.DrawLatex(13.0079,30896.4,"#bf{RunF_{Late}GH}");
-        lt.DrawLatex(13.0079,7733.95,eta_bins[i]+" < #eta < "+eta_bins[i+1]);
-        lt.DrawLatex(13.0079,1600,"#bf{#sqrt{s} = 13 TeV 16.5 fb^{-1}}");
-        lt.SetTextAlign(12);
+        if (choice == 1) {
+            TLegend *lt = new TLegend(0.1260434,0.7496774,0.2278798,0.8709677,NULL,"brNDC");
+            lt->SetBorderSize(0);
+            lt->SetTextFont(42);
+            lt->SetTextSize(0.035);
+            lt->AddEntry("","RunBCDEF_{Early} 16.5 fb^{-1}","");
+            lt->AddEntry("","AK4chs Jets","");
+            lt->AddEntry("",eta_bins[i]+" < #eta < "+eta_bins[i+1],"");
+            lt->Draw();
+        } else {
+            TLegend *lt = new TLegend(0.1260434,0.7496774,0.2278798,0.8709677,NULL,"brNDC");
+            lt->SetBorderSize(0);
+            lt->SetTextFont(42);
+            lt->SetTextSize(0.035);
+            lt->AddEntry("","RunF_{Late}GH 16.5 fb^{-1}","");
+            lt->AddEntry("","AK4chs Jets","");
+            lt->AddEntry("",eta_bins[i]+" < #eta < "+eta_bins[i+1],"");
+            lt->Draw();
+        }
         
         c1->SaveAs("RawMassSpectrum_"+eta_bins[i]+"-"+eta_bins[i+1]+"_.png");
         c1->Update();
@@ -105,7 +124,6 @@ void rawMassMerged(){
     /////////////////////////////////////////////////////////////////////
     //get Turn-On point values wrt corresponding HLT_PFJet
     /////////////////////////////////////////////////////////////////////
-    
     double turnOn[4][7];
     TString etaJet[4][7];
     float a[4][7];
@@ -113,7 +131,6 @@ void rawMassMerged(){
     TCanvas * c2 = new TCanvas("c2", "c2", w, h);
     
     for (int i=0; i<4; i++) {
-        
         
         TString bbbb;
         
@@ -166,26 +183,26 @@ void rawMassMerged(){
             bbbb = (TString) ("eta_"+eta_bins[i]+"-"+eta_bins[i+1]+"_jt"+jt[j+1]+"/jt"+jt[j]);
             etaJet[i][j] = bbbb;
             
-            //Lines from point to each axis
-            TLine *line_h = new TLine(0.,1.,2700.,1.);
-            line_h->SetLineColor(kBlack);
-            line_h->SetLineStyle(2);
-            line_h->SetLineWidth(1);
-            line_h->Draw();
-            
-            TLine *line_v = new TLine(f1->GetX(0.99), 0., f1->GetX(0.99), 1.);
-            line_v->SetLineColor(kBlack);
-            line_v->SetLineStyle(2);
-            line_v->SetLineWidth(1);
-            line_v->Draw();
-            
-            //Latex
-            TLatex l;
-            l.SetTextSize(0.025);
-            //l.SetTextAngle(30.);
-            l.DrawLatex(1320.114,0.296371,Form("TurnOn Point = %f",f1->GetX(0.99)));
-            l.DrawLatex(1320.114,0.371371,Form("%s, %s"+jt[j+1],"jt"));
-            l.DrawLatex(1320.114,0.441533,Form(eta_bins[i] + "%s" + eta_bins[i+1]," < #||{#eta} < "));
+//            //Lines from point to each axis
+//            TLine *line_h = new TLine(0.,1.,2700.,1.);
+//            line_h->SetLineColor(kBlack);
+//            line_h->SetLineStyle(2);
+//            line_h->SetLineWidth(1);
+//            line_h->Draw();
+//            
+//            TLine *line_v = new TLine(f1->GetX(0.99), 0., f1->GetX(0.99), 1.);
+//            line_v->SetLineColor(kBlack);
+//            line_v->SetLineStyle(2);
+//            line_v->SetLineWidth(1);
+//            line_v->Draw();
+//            
+//            //Latex
+//            TLatex l;
+//            l.SetTextSize(0.025);
+//            //l.SetTextAngle(30.);
+//            l.DrawLatex(1320.114,0.296371,Form("TurnOn Point = %f",f1->GetX(0.99)));
+//            l.DrawLatex(1320.114,0.371371,Form("%s, %s"+jt[j+1],"jt"));
+//            l.DrawLatex(1320.114,0.441533,Form(eta_bins[i] + "%s" + eta_bins[i+1]," < #||{#eta} < "));
             
         }// j of TurnOn loop
     }// i of TurnOn plots
@@ -193,8 +210,8 @@ void rawMassMerged(){
     /////////////////////////////////////////////////////////////////////
     // cut the right and left of massSpectrum wrt turnOn points
     /////////////////////////////////////////////////////////////////////
-    
     for (int i=0; i<4; i++) {
+        
         TCanvas * c3 = new TCanvas("c3", "c3", w, h);
         c3->SetLogy();
         c3->SetLogx();
@@ -277,22 +294,32 @@ void rawMassMerged(){
         
         leg->Draw();
  
-        TLegend *leg2 = new TLegend(0.3060601,0.1089862,0.4079967,0.3401843,NULL,"brNDC");
-        leg2->SetBorderSize(0);
-        leg2->SetTextFont(42);
-        leg2->SetTextSize(0.045);
-
-        leg2->AddEntry("","RunF_{late}GH 16.5 fb^{-1}","");
-        leg2->AddEntry("","AK4chs Jets","");
-        leg2->AddEntry("",eta_bins[i]+" < #eta < "+eta_bins[i+1],"");
-        leg2->Draw();
+        if (choice == 1) {
+            TLegend *leg2 = new TLegend(0.1210351,0.1341935,0.2228715,0.2554839,NULL,"brNDC");
+            leg2->SetBorderSize(0);
+            leg2->SetTextFont(42);
+            leg2->SetTextSize(0.035);
+            leg2->AddEntry("","RunBCDEF_{Early} 16.5 fb^{-1}","");
+            leg2->AddEntry("","AK4chs Jets","");
+            leg2->AddEntry("",eta_bins[i]+" < #eta < "+eta_bins[i+1],"");
+            leg2->Draw();
+        } else {
+            TLegend *leg2 = new TLegend(0.1210351,0.1341935,0.2228715,0.2554839,NULL,"brNDC");
+            leg2->SetBorderSize(0);
+            leg2->SetTextFont(42);
+            leg2->SetTextSize(0.035);
+            leg2->AddEntry("","RunF_{late}GH 16.5 fb^{-1}","");
+            leg2->AddEntry("","AK4chs Jets","");
+            leg2->AddEntry("",eta_bins[i]+" < #eta < "+eta_bins[i+1],"");
+            leg2->Draw();
+        }
         
         TLatex *t6 = new TLatex();
         t6->SetNDC();
         t6->SetTextFont(42);
-        t6->SetTextSize(0.05);
+        t6->SetTextSize(0.035);
         t6->SetTextAlign(11);
-        t6->DrawLatex(0.1,0.92,"CMS Internal, #sqrt{s}=13 TeV");
+        t6->DrawLatex(0.1,0.92,"#bf{CMS} Preliminary, #sqrt{s}=13 TeV");
 
         c3->SaveAs("MassSpectrum_"+eta_bins[i]+"-"+eta_bins[i+1]+"_.png");
         c3->Update();
