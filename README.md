@@ -7,14 +7,13 @@ General notes;
     If you change the Data versions do not forget Legends :)
 
 Future updates;
-    Automaticly  change Legend when Data version is changed.
     Bash script to run all source code with one command line.
 
 How to use;
     Basically do "root -l -b -q <X.cpp>"
 
 ---rawMassMerged.cpp---
-Source code use only one Data version.First, change the Data version to one you want to use. Data version should be "normalized".
+Source code use only one Data version.First, change and "SELECT" the Data version you want to use. Data version should be "normalized".
 Then source code do following;
     Plotting raw mass distributions for each jet trigger.
     Reconstructing "Dijet Mass Spectrum" then plotting.
@@ -33,7 +32,7 @@ Source code use two Data version and MC (versions should be "combined") then do 
     Plotting fractions for each rapidity bins.
 
 ---fraction_by_triggers.cpp---
-Source code use only one Data version and trigger simulated MC (versions should be "normalized"). First, change the Data version to one you want to use.
+Source code use only one Data version and trigger simulated MC (versions should be "normalized"). First, change and "SELECT" the Data version you want to use.
 Then source code do following;
     Plotting fractions for Data and MC. By default it plots only CHF for each triggers and rapidity bins.
     
