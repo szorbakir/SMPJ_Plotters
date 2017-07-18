@@ -156,7 +156,6 @@ void rawMassMerged(){
             h_djmass[j]->Draw();
             
             //"a" the fit parameter optimisation
-            //double a=1.75;
             a[i][j]=1.75;
             
             if (i == 1 && j == 6) a[i][j] = 2.0;
