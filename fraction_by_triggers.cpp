@@ -7,6 +7,13 @@
 
 void fraction_by_triggers(){
     
+    int choice;
+    
+    cout << "Which DATA version? Please SELECT..." << endl;
+    cout << "1. RunBCDEFearly" << endl;
+    cout << "2. RunFlateGH" << endl;
+    cin >> choice;
+    
     TString jt[] = {
         "40",
         "80",
@@ -98,16 +105,28 @@ void fraction_by_triggers(){
             h_MC_->Draw("e1hist");
             h_Data_->Draw("e1histsame");
             
-            TLegend *leg = new TLegend(0.3060601,0.1089862,0.4079967,0.3401843,NULL,"brNDC");
-            leg->SetBorderSize(0);
-            leg->SetTextFont(42);
-            leg->SetTextSize(0.045);
-            leg->AddEntry(h_MC_,"MC, HLT_PFJet" + jt[j],"l");
-            leg->AddEntry(h_Data_,"RunF_{Late}GH, HLT_PFJet" + jt[j],"lep");
-//            leg->AddEntry(h_Data_,"RunBCDEF_{Early}, HLT_PFJet" + jt[j],"lep");
-            leg->AddEntry("","AK4chs Jets","");
-            leg->AddEntry("",eta_name,"");
-            leg->Draw();
+            if (choice == 1) {
+                TLegend *leg = new TLegend(0.3060601,0.1089862,0.4079967,0.3401843,NULL,"brNDC");
+                leg->SetBorderSize(0);
+                leg->SetTextFont(42);
+                leg->SetTextSize(0.045);
+                leg->AddEntry(h_MC_,"MC, HLT_PFJet" + jt[j],"l");
+                leg->AddEntry(h_Data_,"RunBCDEF_{Early}, HLT_PFJet" + jt[j],"lep");
+                leg->AddEntry("","AK4chs Jets","");
+                leg->AddEntry("",eta_name,"");
+                leg->Draw();
+            } else {
+                TLegend *leg = new TLegend(0.3060601,0.1089862,0.4079967,0.3401843,NULL,"brNDC");
+                leg->SetBorderSize(0);
+                leg->SetTextFont(42);
+                leg->SetTextSize(0.045);
+                leg->AddEntry(h_MC_,"MC, HLT_PFJet" + jt[j],"l");
+                leg->AddEntry(h_Data_,"RunF_{Late}GH, HLT_PFJet" + jt[j],"lep");
+                leg->AddEntry("","AK4chs Jets","");
+                leg->AddEntry("",eta_name,"");
+                leg->Draw();
+
+            }
             
             TLatex *t6 = new TLatex();
             t6->SetNDC();
