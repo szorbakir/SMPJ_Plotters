@@ -164,14 +164,14 @@ void rawMassMerged(){
             if ((i ==2) && (j >= 3)) a[i][j] = 2.8;
             if (i == 3) a[i][j] = 3.0;
             if ((i == 3) && (j == 1)) a[i][j] = 3.4;
-            if ((i == 3) && (j == 2)) a[i][j] = 3.5;
+            if ((i == 3) && (j == 2)) a[i][j] = 4;
             if ((i == 3) && (j == 3)) a[i][j] = 4.1;
             if ((i == 3) && (j == 4)) a[i][j] = 4.1;
             if ((i == 3) && (j == 5)) a[i][j] = 4.3;
-            if ((i == 3) && (j == 6)) a[i][j] = 3.5;
+            if ((i == 3) && (j == 6)) a[i][j] = 4.5;
             
             //Fit function
-            TF1 *f1 = new TF1("f1","0.5*(1+TMath::Erf((x-[0])/[1]))",atoi(jt[j+1])*a[i][j],4000.);
+            TF1 *f1 = new TF1("f1","0.5*(1+TMath::Erf((x-[0])/[1]))",atoi(jt[j+1])*a[i][j],3500.);
             
             f1->SetParameters(2*atoi(jt[j+1])*cosh(0.5),atoi(jt[j+1])*2*0.1);
             f1->SetLineWidth(1);
