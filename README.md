@@ -1,5 +1,5 @@
 # SMPJ_Plotters
-Various source codes to plot histograms from SMP-J official NTuples.
+Various source codes to plot histograms from SMP-Jet official NTuples.
 
 General notes;
     Please use the last version of ROOT.
@@ -35,5 +35,3 @@ Source code use two Data version and MC (versions should be "combined") then do 
 Source code use only one Data version and trigger simulated MC (versions should be "normalized"). First, change and "SELECT" the Data version you want to use.
 Then source code do following;
     Plotting fractions for Data and MC. By default it plots only CHF for each triggers and rapidity bins.
-    
-        
