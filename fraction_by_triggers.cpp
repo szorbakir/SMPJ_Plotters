@@ -107,8 +107,8 @@ void fraction_by_triggers(){
             h_MC_ -> SetMarkerStyle(20);
             h_MC_ -> SetMarkerColor(kRed+1);
             
-            h_MC_->Draw("e1hist");
-            h_Data_->Draw("e1histsame");
+            h_Data_->Draw("e1hist");
+            h_MC_->Draw("e1histsame");
             
             TLegend *leg = new TLegend(0.3460601,0.1089862,0.4279967,0.3201843,NULL,"brNDC");
             leg->SetBorderSize(0);
