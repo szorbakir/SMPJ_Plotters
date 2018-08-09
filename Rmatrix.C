@@ -27,6 +27,8 @@ void Rmatrix(){
     TCanvas * c1 = new TCanvas("c1", "c1", w, h);
     c1->SetLogx();
     c1->SetLogy();
+    //c1->SetFillColor(1);
+    //c1->SetFrameFillColor(50);
     
     gPad->SetLogz();
     gStyle->SetPalette(1);
@@ -34,7 +36,7 @@ void Rmatrix(){
     gStyle->SetOptTitle(0);
     gStyle->SetPaintTextFormat("1.2f");
     
-    TFile *MC_file = new TFile("nonleading_rm/output-MC-1.root");
+    TFile *MC_file = new TFile("output-MC-PtHat-1.root");
     
     
     ///// Histos booking //////
@@ -59,7 +61,7 @@ void Rmatrix(){
 		
 		for (int j=first_bin; j<=last_bin; j++) {
 		//for (int j=first_bin; j<=first_bin+2; j++) {
-			for (int k=1; k<=last_bin+1; k++) {
+			for (int k=1; k<=last_bin; k++) {
 				
 				double binvalue = R_Matrix[i]->GetBinContent(j,k);
 				if (binvalue != 0 ) sum_columns[i][j] += binvalue ;
@@ -72,7 +74,7 @@ void Rmatrix(){
 		
 		for (int j=first_bin; j<=last_bin; j++) {
 		//for (int j=first_bin; j<=first_bin+2; j++) {
-			for (int k=1; k<=last_bin+1; k++) {
+			for (int k=1; k<=last_bin; k++) {
 				
 				double binvalue = R_Matrix[i]->GetBinContent(j,k);
 				if (binvalue != 0 ) R_Matrix[i]->SetBinContent(j,k,binvalue/sum_columns[i][j]);
@@ -90,7 +92,7 @@ void Rmatrix(){
 		
                 R_Matrix[i]->GetYaxis()->SetRangeUser(70.,10000.);
    		R_Matrix[i]->GetXaxis()->SetRangeUser(70.,10000.);
-   		R_Matrix[i]->GetZaxis()->SetRangeUser(0.001,1.);
+   		R_Matrix[i]->GetZaxis()->SetRangeUser(0.0001,1.);
    		
    		R_Matrix[i]->GetYaxis()->SetTitle("Mjj_{ True}(GeV)");
    		R_Matrix[i]->GetXaxis()->SetTitle("Mjj_{ Reco}(GeV)");
@@ -110,6 +112,12 @@ void Rmatrix(){
                 //Double_t norm = 1/(R_Matrix[i]->GetMaximum());
                 //R_Matrix[i]->Scale(norm);
                 R_Matrix[i]->Draw("COLZ");
+                
+                TLatex lt;
+                lt.SetNDC();
+            	lt.SetTextSize(0.03);
+                lt.DrawLatex(0.77,0.22,eta[i]+" < #eta < "+eta[i+1]);
+                lt.SetTextAlign(12);
                 
                 c1->SaveAs("ResponseMatrix_"+ eta[i] + "-" + eta[i+1] +".png");
                 R_Matrix[i]->Delete();

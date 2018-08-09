@@ -8,10 +8,7 @@ void smp_plotter_pt(){
     
     TString observable[] = {
         "hpt",
-        "hdj_leading",
-        "hdj_subleading",
-        "hpt1",
-        "hpt2"
+        "hpt4"
     };
     
     TString axis_name[] = {
@@ -28,16 +25,11 @@ void smp_plotter_pt(){
         "1.0",
         "1.5",
         "2.0",
-        "2.5",
-        "3.0",
-        "3.2",
-        "4.7"
+        "2.5"       
     };
     
     TString inputFile1;
-    TString inputFile2;
-    TString inputFile3;
-    TString inputFile4;
+    
     
     Double_t w = 1200;
     Double_t h = 1000;
@@ -45,49 +37,32 @@ void smp_plotter_pt(){
     
     TCanvas * c1 = new TCanvas("c1", "c1", w, h);
     
-    TH1D *h_MadGraph_;
-    TH1D *h_Herwig_;
-    TH1D *h_Pythia_;
+    
     
     TH1D *h_DATA_;
+    TH1D *h_DATA_2;
     
-    TH1D *h_Ratio_MD_;
-    TH1D *h_Ratio_HW_;
-    TH1D *h_Ratio_PYT_;
+    TH1D *h_Ratio_;
     
-    inputFile1.Form("output-MDG-2b.root");
-    inputFile2.Form("output-HW-2b.root");
-    inputFile3.Form("output-MC-2a.root");
-    inputFile4.Form("output-DATA-2b.root");
+    
+    
+    inputFile1.Form("output-DATA-2b.root");
     
     int counter = (sizeof(observable)/sizeof(*observable));
     int bin_counter = (sizeof(eta_bins)/sizeof(*eta_bins));
     
     for (int j=0; j<bin_counter-1; j++) {
-        for (int i=0; i<counter; i++) {
+        for (int i=0; i<1; i++) {
         
             TString hname = (TString) (observable[i]+"_"+eta_bins[j] + "-" + eta_bins[j+1]);
             TString eta_name = (TString) (eta_bins[j] + " < #eta < " + eta_bins[j+1]);
             
-            //MC
-            TFile* MCFile1 = TFile::Open(inputFile1.Data(), "READ");
-            MCFile1 -> cd("Standard/Eta_" + eta_bins[j] + "-" + eta_bins[j+1]);
-            h_MadGraph_ = (TH1D*)gDirectory->FindObjectAny(observable[i]);
-            
-            //MC
-            TFile* MCFile2 = TFile::Open(inputFile2.Data(), "READ");
-            MCFile2 -> cd("Standard/Eta_" + eta_bins[j] + "-" + eta_bins[j+1]);
-            h_Herwig_ = (TH1D*)gDirectory->FindObjectAny(observable[i]);
-            
-            //MC
-            TFile* MCFile3 = TFile::Open(inputFile3.Data(), "READ");
-            MCFile3 -> cd("Standard/Eta_" + eta_bins[j] + "-" + eta_bins[j+1]);
-            h_Pythia_ = (TH1D*)gDirectory->FindObjectAny(observable[i]);
     
             //DATA
-            TFile* DATAFile = TFile::Open(inputFile4.Data(), "READ");
+            TFile* DATAFile = TFile::Open(inputFile1.Data(), "READ");
             DATAFile -> cd("Standard/Eta_" + eta_bins[j] + "-" + eta_bins[j+1]);
             h_DATA_ = (TH1D*)gDirectory->FindObjectAny(observable[i]);
+            h_DATA_2 = (TH1D*)gDirectory->FindObjectAny(observable[i+1]);
             
             double xmin = 1000000, xmax = 0;
             double ymin = 0.;
@@ -109,23 +84,17 @@ void smp_plotter_pt(){
                     }
             }
             
-            // Basic Scaling ////
+            /*// Basic Scaling ////
             double Int_data = (h_DATA_->Integral());
-            double Int_MC1   = (h_MadGraph_->Integral(xmin,xmax));
-            double Int_MC2   = (h_Herwig_->Integral(xmin,xmax));
-            double Int_MC3   = (h_Pythia_->Integral(xmin,xmax));
+            double Int_data2 = (h_DATA_2->Integral());
+            
             
             double Scale_Factor_1 = 0;
-            double Scale_Factor_2 = 0;
-            double Scale_Factor_3 = 0;
             
-            Scale_Factor_1 = Int_data/Int_MC1;
-            h_MadGraph_->Scale(Scale_Factor_1);
-            Scale_Factor_2 = Int_data/Int_MC2;
-            h_Herwig_->Scale(Scale_Factor_2);
-            Scale_Factor_3 = Int_data/Int_MC3;
-            h_Pythia_->Scale(Scale_Factor_3);
-            //End of scaling //
+            Scale_Factor_1 = Int_data/Int_data2;
+            h_DATA_2->Scale(Scale_Factor_1);
+            */
+            
             
             //Draw, cosmetics, etc.
             gStyle->SetOptStat(0);
@@ -140,51 +109,38 @@ void smp_plotter_pt(){
             pad1-> SetLogx();
             pad1->cd();
     
-            h_Ratio_MD_ = (TH1D*) h_MadGraph_->Clone("h_Ratio_MD_");
-            h_Ratio_HW_ = (TH1D*) h_Herwig_->Clone("h_Ratio_HW_");
-            h_Ratio_PYT_ = (TH1D*) h_Pythia_->Clone("h_Ratio_PYT_");
+            h_Ratio_ = (TH1D*) h_DATA_2->Clone("h_Ratio_");
+            
 
-            h_MadGraph_->GetXaxis()->SetRangeUser(ymin,2500);
-            h_MadGraph_->GetXaxis()->SetLabelOffset(999);
-            h_MadGraph_->GetYaxis()->SetNdivisions(505);
-            h_MadGraph_->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-            h_MadGraph_->GetXaxis()->SetLabelSize(20);
-            h_MadGraph_->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-            h_MadGraph_->GetYaxis()->SetLabelSize(20);
-            h_MadGraph_->SetMarkerColor(kBlue+1);
-            h_MadGraph_->SetLineColor(kBlue+1);
-            h_MadGraph_->SetLineWidth(2);
-            h_MadGraph_->SetYTitle("A.U.");
-            h_MadGraph_->GetYaxis()->SetTitleOffset(0.8);
-            h_MadGraph_->GetYaxis()->SetTitleSize(0.05);
-            h_MadGraph_->GetYaxis()->SetTitleFont(42);
-            
-            h_Herwig_->SetMarkerColor(kGreen+1);
-            h_Herwig_->SetLineColor(kGreen+1);
-            h_Herwig_->SetLineWidth(2);
-            
-            h_Pythia_->SetMarkerColor(kRed+1);
-            h_Pythia_->SetLineColor(kRed+1);
-            h_Pythia_->SetLineWidth(2);
-            
-            h_DATA_->SetMarkerColor(kBlack);
-            h_DATA_->SetMarkerStyle(20);
-            h_DATA_->SetLineColor(kBlack);
+            h_DATA_->GetXaxis()->SetRangeUser(ymin,2500);
+            h_DATA_->GetXaxis()->SetLabelOffset(999);
+            h_DATA_->GetYaxis()->SetNdivisions(505);
+            h_DATA_->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+            h_DATA_->GetXaxis()->SetLabelSize(20);
+            h_DATA_->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+            h_DATA_->GetYaxis()->SetLabelSize(20);
+            h_DATA_->SetMarkerColor(kBlue+1);
+            h_DATA_->SetLineColor(kBlue+1);
             h_DATA_->SetLineWidth(2);
+            h_DATA_->SetYTitle("A.U.");
+            h_DATA_->GetYaxis()->SetTitleOffset(0.8);
+            h_DATA_->GetYaxis()->SetTitleSize(0.05);
+            h_DATA_->GetYaxis()->SetTitleFont(42);
             
-            h_MadGraph_->Draw("E1HIST");
-            h_Herwig_->Draw("E1HISTSAME");
-            h_Pythia_->Draw("E1HISTSAME");
-            h_DATA_->Draw("E1HIST SAME");
+            h_DATA_2->SetMarkerColor(kBlack);
+            h_DATA_2->SetMarkerStyle(20);
+            h_DATA_2->SetLineColor(kBlack);
+            h_DATA_2->SetLineWidth(2);
+            
+            h_DATA_->Draw("E1HIST");
+            h_DATA_2->Draw("E1HIST SAME");
             
             TLegend *leg = new TLegend(0.7145242,0.6249084,0.8163606,0.8886447,NULL,"brNDC");
             leg->SetBorderSize(0);
             leg->SetTextFont(42);
             leg->SetTextSize(0.045);
-            leg->AddEntry(h_MadGraph_,"MadGraph","l");
-            leg->AddEntry(h_Herwig_,"Herwig","l");
-            leg->AddEntry(h_Pythia_,"Pythia","l");
-            leg->AddEntry(h_DATA_,"RunBCDEFGH","lp");
+            leg->AddEntry(h_DATA_,"Inclusive jets","l");
+            leg->AddEntry(h_DATA_2,"High Chf jets","l");
             leg->AddEntry("","AK4chs Jets","");
             leg->AddEntry("",eta_name,"");
             leg->Draw();
@@ -213,45 +169,36 @@ void smp_plotter_pt(){
             pad2->cd();       // pad2 becomes the current pad
             gPad-> SetLogx();
     
-            h_Ratio_MD_->Divide(h_DATA_);
-            h_Ratio_HW_->Divide(h_DATA_);
-            h_Ratio_PYT_->Divide(h_DATA_);
+            h_Ratio_->Divide(h_DATA_);
+            
     
             //cosmetics
-            h_Ratio_MD_->GetXaxis()->SetRangeUser(ymin,2500);
-            h_Ratio_MD_->SetXTitle(axis_name[i]);
-            h_Ratio_MD_->SetYTitle("MC/Data");
-            h_Ratio_MD_->GetYaxis()->SetTitleOffset(0.8);
-            h_Ratio_MD_->GetYaxis()->CenterTitle();
-            h_Ratio_MD_->SetMarkerColor(kBlue+1);
-            h_Ratio_MD_->SetLineColor(kBlue+1);
-            h_Ratio_MD_->SetLineWidth(2);
-            h_Ratio_MD_->GetYaxis()->SetRangeUser(0.5,1.9);
-            h_Ratio_MD_->GetYaxis()->SetNdivisions(606);
-            h_Ratio_MD_->GetYaxis()->SetTitleSize(0.11);
-            h_Ratio_MD_->GetYaxis()->SetTitleFont(42);
-            h_Ratio_MD_->GetYaxis()->SetTitleOffset(0.35);
-            h_Ratio_MD_->GetYaxis()->SetLabelFont(43);
-            h_Ratio_MD_->GetYaxis()->SetLabelSize(18);
-            h_Ratio_MD_->GetXaxis()->SetMoreLogLabels();
-            h_Ratio_MD_->GetXaxis()->SetNoExponent();
-            h_Ratio_MD_->GetXaxis()->SetTitleSize(0.11);
-            h_Ratio_MD_->GetXaxis()->SetTitleFont(42);
-            h_Ratio_MD_->GetXaxis()->SetTitleOffset(1.1);
-            h_Ratio_MD_->GetXaxis()->SetLabelFont(43);
-            h_Ratio_MD_->GetXaxis()->SetLabelSize(18);
+            h_Ratio_->GetXaxis()->SetRangeUser(ymin,2500);
+            h_Ratio_->SetXTitle(axis_name[i]);
+            h_Ratio_->SetYTitle("Ratio");
+            h_Ratio_->GetYaxis()->SetTitleOffset(0.8);
+            h_Ratio_->GetYaxis()->CenterTitle();
+            h_Ratio_->SetMarkerColor(kBlue+1);
+            h_Ratio_->SetLineColor(kBlue+1);
+            h_Ratio_->SetLineWidth(2);
+            h_Ratio_->GetYaxis()->SetRangeUser(0.,0.1);
+            h_Ratio_->GetYaxis()->SetNdivisions(606);
+            h_Ratio_->GetYaxis()->SetTitleSize(0.11);
+            h_Ratio_->GetYaxis()->SetTitleFont(42);
+            h_Ratio_->GetYaxis()->SetTitleOffset(0.35);
+            h_Ratio_->GetYaxis()->SetLabelFont(43);
+            h_Ratio_->GetYaxis()->SetLabelSize(18);
+            h_Ratio_->GetXaxis()->SetMoreLogLabels();
+            h_Ratio_->GetXaxis()->SetNoExponent();
+            h_Ratio_->GetXaxis()->SetTitleSize(0.11);
+            h_Ratio_->GetXaxis()->SetTitleFont(42);
+            h_Ratio_->GetXaxis()->SetTitleOffset(1.1);
+            h_Ratio_->GetXaxis()->SetLabelFont(43);
+            h_Ratio_->GetXaxis()->SetLabelSize(18);
+        
             
-            h_Ratio_HW_->SetMarkerColor(kGreen+1);
-            h_Ratio_HW_->SetLineColor(kGreen+1);
-            h_Ratio_HW_->SetLineWidth(2);
+            h_Ratio_->Draw("E1HIST");
             
-            h_Ratio_PYT_->SetMarkerColor(kRed+1);
-            h_Ratio_PYT_->SetLineColor(kRed+1);
-            h_Ratio_PYT_->SetLineWidth(2);
-            
-            h_Ratio_MD_->Draw("E1HIST");
-            h_Ratio_HW_->Draw("E1HISTSAME");
-            h_Ratio_PYT_->Draw("E1HISTSAME");
             
             c1->SaveAs(hname + ".png"); //saving...
         }
