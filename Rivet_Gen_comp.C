@@ -42,7 +42,7 @@ void Rivet_Gen_comp(){
     
    
     
-    TFile *MC_file = new TFile("output-MC-1.root");
+    TFile *MC_file = new TFile("output-MC-PtHat-1.root");
     TFile *Rivet_file = new TFile("P8-dijetMass-13TeV-ALL-ON.root");
     Rivet_file -> cd("CMS_Dijet_Mass_13TeV_test");
     
@@ -63,11 +63,11 @@ void Rivet_Gen_comp(){
     for (int i=0; i<bin_counter-1; i++) { //
     
     		char AK4Plot_no[20];
-    		sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-x01-y01-AK4"); // mass plots
-    		//sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-Pt-AK4");   //pt distribution
+    		//sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-x01-y01-AK4"); // mass plots
+    		sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-Pt-AK4");   //pt distribution
  	
-		//Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdj_leading");
-		Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdjmass");
+		Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdj_leading");
+		//Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdjmass");
 		//Reco_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/hdjmass");
 		Rivet_level[i] = (TH1D*)gDirectory->FindObjectAny(AK4Plot_no);
 		
@@ -135,6 +135,12 @@ void Rivet_Gen_comp(){
            	//leg->AddEntry(Reco_level[i],"Reco","l");
            	leg->Draw();
            	
+           	TLatex lt;
+                lt.SetNDC();
+            	lt.SetTextSize(0.03);
+                lt.DrawLatex(0.77,0.72,eta[i]+" < #eta < "+eta[i+1]);
+                lt.SetTextAlign(12);
+           	
            	//cout << "Rivet_BinNumber: " << Rivet_level[i]->GetSize()-2 << " Gen_BinNumber: " << Gen_level[i]->GetSize()-2 <<  endl;
            	
            	Ratio = (TH1D*)Rivet_level[i]->Clone("Ratio");
@@ -154,7 +160,8 @@ void Rivet_Gen_comp(){
                 
                 //Cosmetics
                 Ratio->SetLineWidth(1);
-                Ratio->SetXTitle("M_{jj}(GeV)");
+                //Ratio->SetXTitle("M_{jj}(GeV)");
+                Ratio->SetXTitle("Leading jet P_{T}(GeV)");
                 Ratio->GetYaxis()->SetTitleOffset(0.8);
                 Ratio->SetYTitle("Rivet/Gen");
                 Ratio->GetXaxis()->SetRangeUser(x,8000.);
@@ -182,6 +189,9 @@ void Rivet_Gen_comp(){
 
 
                 Ratio->Draw("E1HIST");
+                
+                
+	
                 
                 
            	
