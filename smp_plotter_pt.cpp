@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 
-
 void smp_plotter_pt(){
     
     TString observable[] = {
