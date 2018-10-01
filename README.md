@@ -13,10 +13,9 @@ Future updates;
 How to use;
     Basically do "root -l -b -q <X.cpp>"
 
-_unc_pt_ratio.cpp                                       --> Plot pTs with total unc. on hand.
-_unc_pt_ratio_seperate_sources.cpp         --> Plot pTs with seperate unc. sources.
-_unc_mass_ratio.cpp                                  --> Plot mass with total unc on hand.
+_unc_pt_ratio.cpp                       --> Plot pTs with total unc. on hand.
+_unc_pt_ratio_seperate_sources.cpp      --> Plot pTs with seperate unc. sources.
+_unc_mass_ratio.cpp                     --> Plot mass with total unc on hand.
 _unc_mass_ratio_seperate_sources.cpp    --> Plot mass with seperate unc. sources.
-summary.cpp                                               --> Plot Summary without unc.
-summary_unc.cpp                                       --> Plot Summary with unc.
-
+summary.cpp                             --> Plot Summary without unc.
+summary_unc.cpp                         --> Plot Summary with unc.
