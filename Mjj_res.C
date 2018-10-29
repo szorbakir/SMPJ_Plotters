@@ -16,44 +16,56 @@ void Mjj_res(){
         "2.5"
     };
     
-   
+    double y[] = {0., 0.5, 1.0, 1.5, 2.0, 2.5};
     
-    
-    
+    char HistoName [100];
+    double nbins = 103;
+
     int bin_counter = (sizeof(eta)/sizeof(*eta));
 
     
     Double_t w = 1200;
     Double_t h = 800;
-    
+    /*
     TCanvas * c1 = new TCanvas("c1", "c1", w, h);
     c1->SetLogx();
     //c1->SetLogy();
     gStyle->SetOptStat(0);
     gStyle->SetOptTitle(0);
-    
-    
-    
-   
+    */
+    TCanvas * c2 = new TCanvas("c2", "c2", w, h);
+    //gStyle->SetOptStat(0);
+    gStyle->SetOptTitle(0);
+    //c2->SetLogy();
+    //c2->SetLogx();
+
     
     TFile *MC_file = new TFile("output-MC-PtHat-1.root");
     
+    TFile *output = new TFile("binBybin_resolutions.root", "RECREATE");
+    output->mkdir("Etas_");
+    TDirectory *topdir = output->GetDirectory("Etas_"); 
+    topdir->cd();
     
-    
+
     ///// Histos booking //////
-    TProfile *Mjj_res[5];
+    //TProfile *Mjj_res[5];
+    TH2D *res2d[5];
+    TH1D *projh2X[5][103];
     
-    
-    
-    
-
-    
-    for (int i=0; i<bin_counter-1; i++) { //
+ 
+    for (int i=0; i<bin_counter-1; i++) { //bin_counter-1
  	
-		Mjj_res[i] = (TProfile*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/pdjmass_res");
-
+		//Mjj_res[i] = (TProfile*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/pdjmass_res");
+                res2d[i] = (TH2D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/h2jetres");
                 
+                // subdirectory for rapidity bin for output file	
+     		const char *yname = Form("Eta_%1.1f-%1.1f", y[i], y[i+1]);
+      		topdir->mkdir(yname);
+      		TDirectory *ydir = topdir->GetDirectory(yname);
+      		ydir->cd();
                 
+                /*
                 c1->cd(); 
                 
                 
@@ -81,16 +93,30 @@ void Mjj_res(){
 		
 		c1->SaveAs("Mjj_Resolution_"+ eta[i] + "-" + eta[i+1] +".png");
                 c1->Update();
+                */
+                
+                c2->cd();
+                
+                for (int j=0; j<nbins+1; j++) { 
+                projh2X[i][j] = res2d[i]->ProjectionY(Form("bin_%d",j+1),j+1,j+2);
+                projh2X[i][j]->Draw();
+                
+                sprintf(HistoName,"%s%d","Projections_bin_",j+1);
+                projh2X[i][j]->Write(HistoName);
+                
+                projh2X[i][j]->Delete(); 
+                c2->Update();
+                
                 
 		
 		
 
-   	
+     }//j	
     }//i
        
     
     
-    
+    output->Close();
     
     
     
