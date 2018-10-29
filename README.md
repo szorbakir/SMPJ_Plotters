@@ -4,34 +4,18 @@ Various source codes to plot histograms from SMP-Jet official NTuples.
 General notes;
     Please use the last version of ROOT.
     These source codes can be used both locally and on LXPLUS.
-    If you change the Data versions do not forget Legends :)
+    Please create  pngs/ and datas/ folders since the new source codes needs them. Please add your output's to datas folder. Or change the input and output paths in cpp's.
 
 Future updates;
-    Bash script to run all source code with one command line.
+    Basic ratio plots for mass and ratio. Probably will do it using TRatioPlot class.
+    Improve Summary_unc.cpp.
 
 How to use;
     Basically do "root -l -b -q <X.cpp>"
 
----rawMassMerged.cpp---
-Source code use only one Data version.First, change and "SELECT" the Data version you want to use. Data version should be "normalized".
-Then source code do following;
-    Plotting raw mass distributions for each jet trigger.
-    Reconstructing "Dijet Mass Spectrum" then plotting.
-
----fit_v1.cpp---
-Source code use two Data version and MC (versions should be "normalized") then do following;
-    Plotting TurnOn point histograms for each jet trigger and rapidity bins.
-    Reconstructing "Dijet Mass Spectrum" then comparing Data versions with MC.
-
----smp_plotter_pt.cpp---
-Source code use two Data version and MC (versions should be "combined") then do following;
-    Plotting raw pT spectrum, pt of inclusive leading and subleading jets for each rapidity bins.
-
----smp_plotter_fractions.cpp---
-Source code use two Data version and MC (versions should be "combined") then do following;
-    Plotting fractions for each rapidity bins.
-
----fraction_by_triggers.cpp---
-Source code use only one Data version and trigger simulated MC (versions should be "normalized"). First, change and "SELECT" the Data version you want to use.
-Then source code do following;
-    Plotting fractions for Data and MC. By default it plots only CHF for each triggers and rapidity bins.
+_unc_pt_ratio.cpp                       --> Plot pTs with total unc. on hand.
+_unc_pt_ratio_seperate_sources.cpp      --> Plot pTs with seperate unc. sources.
+_unc_mass_ratio.cpp                     --> Plot mass with total unc on hand.
+_unc_mass_ratio_seperate_sources.cpp    --> Plot mass with seperate unc. sources.
+summary.cpp                             --> Plot Summary without unc.
+summary_unc.cpp                         --> Plot Summary with unc.

@@ -63,11 +63,11 @@ void Rivet_Gen_comp(){
     for (int i=0; i<bin_counter-1; i++) { //
     
     		char AK4Plot_no[20];
-    		sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-x01-y01-AK4"); // mass plots
-    		//sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-Pt-AK4");   //pt distribution
+    		//sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-x01-y01-AK4"); // mass plots
+    		sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-Pt-AK4");   //pt distribution
  	
-		//Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdj_leading");
-		Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdjmass");
+		Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdj_leading");
+		//Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdjmass");
 		//Reco_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/hdjmass");
 		Rivet_level[i] = (TH1D*)gDirectory->FindObjectAny(AK4Plot_no);
 		
@@ -160,8 +160,13 @@ void Rivet_Gen_comp(){
                 
                 //Cosmetics
                 Ratio->SetLineWidth(1);
+<<<<<<< HEAD
                 Ratio->SetXTitle("M_{jj}(GeV)");
                 //Ratio->SetXTitle("Leading jet P_{T}(GeV)");
+=======
+                //Ratio->SetXTitle("M_{jj}(GeV)");
+                Ratio->SetXTitle("Leading jet P_{T}(GeV)");
+>>>>>>> 22029c1badc38a2f9db793cc02446dc83a5af63f
                 Ratio->GetYaxis()->SetTitleOffset(0.8);
                 Ratio->SetYTitle("Rivet/Gen");
                 Ratio->GetXaxis()->SetRangeUser(x,8000.);
