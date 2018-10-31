@@ -72,17 +72,18 @@ void Resolution(){
         
         
         gr_rms[i] = new TGraph(nbins, massBoundaries, rms);
-        gr_rms[i]->SetLineColor(2);
+        gr_rms[i]->SetLineColor(4);
         gr_rms[i]->SetLineWidth(1);
         gr_rms[i]->SetMarkerColor(4);
         gr_rms[i]->SetMarkerSize(0.9);
 		gr_rms[i]->SetMarkerStyle(26);
 		gr_rms[i]->GetXaxis()->SetTitle("M_{jj}");
 		gr_rms[i]->GetYaxis()->SetTitle("#sigmaM_{jj}");
+		gr_rms[i]->GetYaxis()->SetTitleOffset(1.1);
 		gr_rms[i]->GetXaxis()->SetMoreLogLabels(); //to make the x-axis a bit easier to read and see where the axis starts.
 		gr_rms[i]->GetXaxis()->SetNoExponent();
 		gr_rms[i]->GetXaxis()->SetLimits(40,10500);
-		gr_rms[i]->GetHistogram()->SetMaximum(1.2);   // along          
+		gr_rms[i]->GetHistogram()->SetMaximum(0.14);       
         gr_rms[i]->GetHistogram()->SetMinimum(0.);
 		gr_rms[i]->Draw("ALP");
 		

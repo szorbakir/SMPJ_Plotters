@@ -16,34 +16,22 @@ void Mjj_res(){
         "2.5"
     };
     
-<<<<<<< HEAD
     double y[] = {0., 0.5, 1.0, 1.5, 2.0, 2.5};
     
     char HistoName [100];
     double nbins = 103;
 
-=======
-   
-    
-    
-    
->>>>>>> 22029c1badc38a2f9db793cc02446dc83a5af63f
     int bin_counter = (sizeof(eta)/sizeof(*eta));
 
     
     Double_t w = 1200;
     Double_t h = 800;
-<<<<<<< HEAD
     /*
-=======
-    
->>>>>>> 22029c1badc38a2f9db793cc02446dc83a5af63f
     TCanvas * c1 = new TCanvas("c1", "c1", w, h);
     c1->SetLogx();
     //c1->SetLogy();
     gStyle->SetOptStat(0);
     gStyle->SetOptTitle(0);
-<<<<<<< HEAD
     */
     TCanvas * c2 = new TCanvas("c2", "c2", w, h);
     //gStyle->SetOptStat(0);
@@ -78,31 +66,6 @@ void Mjj_res(){
       		ydir->cd();
                 
                 /*
-=======
-    
-    
-    
-   
-    
-    TFile *MC_file = new TFile("output-MC-PtHat-1.root");
-    
-    
-    
-    ///// Histos booking //////
-    TProfile *Mjj_res[5];
-    
-    
-    
-    
-
-    
-    for (int i=0; i<bin_counter-1; i++) { //
- 	
-		Mjj_res[i] = (TProfile*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/pdjmass_res");
-
-                
-                
->>>>>>> 22029c1badc38a2f9db793cc02446dc83a5af63f
                 c1->cd(); 
                 
                 
@@ -130,7 +93,6 @@ void Mjj_res(){
 		
 		c1->SaveAs("Mjj_Resolution_"+ eta[i] + "-" + eta[i+1] +".png");
                 c1->Update();
-<<<<<<< HEAD
                 */
                 
                 c2->cd();
@@ -145,26 +107,16 @@ void Mjj_res(){
                 projh2X[i][j]->Delete(); 
                 c2->Update();
                 
-=======
->>>>>>> 22029c1badc38a2f9db793cc02446dc83a5af63f
                 
 		
 		
 
-<<<<<<< HEAD
      }//j	
-=======
-   	
->>>>>>> 22029c1badc38a2f9db793cc02446dc83a5af63f
     }//i
        
     
     
-<<<<<<< HEAD
     output->Close();
-=======
-    
->>>>>>> 22029c1badc38a2f9db793cc02446dc83a5af63f
     
     
     
