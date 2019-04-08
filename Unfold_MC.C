@@ -5,7 +5,7 @@
 #include <stdio.h>      
 #include <stdlib.h>
 
-void Rivet_Gen_comp(){
+void Unfold_MC(){
     
     TString eta[] = {
         "0.0",
@@ -16,10 +16,8 @@ void Rivet_Gen_comp(){
         "2.5"
     };
     
-   
     
-    
-    
+    TString x[] ={"0","1","2","3","4"};
     int bin_counter = (sizeof(eta)/sizeof(*eta));
 
     
@@ -42,64 +40,27 @@ void Rivet_Gen_comp(){
     
    
     
-    TFile *MC_file = new TFile("output-MC-PtHat-1.root");
-    TFile *Rivet_file = new TFile("P8-dijetMass-13TeV-ALL-ON.root");
-    Rivet_file -> cd("CMS_Dijet_Mass_13TeV_test");
+    TFile *Unfolded_file = new TFile("unfoldedSpectraLeadingPtUpJER-CentralBTagging-0.0.root");
+    TFile *Gen_file = new TFile("output-MC-PtHat-1.root");
+    
     
     
     ///// Histos booking //////
 
     
+    TH1D* Unfolded_level[5];
     TH1D* Gen_level[5];
-    TH1D* Rivet_level[5];
     TH1D* Ratio;
-    //TH1D* Reco_level[5];
-    
-    
-    
-    
+
 
     
     for (int i=0; i<bin_counter-1; i++) { //
     
-    		char AK4Plot_no[20];
-    		//sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-x01-y01-AK4"); // mass plots
-    		sprintf(AK4Plot_no, "%s%d%s","d0",i+1,"-Pt-AK4");   //pt distribution
+    		
  	
-		Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdj_leading");
-		//Gen_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdjmass");
-		//Reco_level[i] = (TH1D*) MC_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/hdjmass");
-		Rivet_level[i] = (TH1D*)gDirectory->FindObjectAny(AK4Plot_no);
 		
-		int binmax = Rivet_level[i]->GetMaximumBin();
-		double x = Rivet_level[i]->GetXaxis()->GetBinCenter(binmax);
-		
-		for (int k=1; k<=binmax; k++) {
-                    
-                	Rivet_level[i]->SetBinContent(k,0);
-                        Rivet_level[i]->SetBinError(k,0);
-                        
-                        Gen_level[i]->SetBinContent(k,0);
-                        Gen_level[i]->SetBinError(k,0);
-                        
-                        //Reco_level[i]->SetBinContent(k,0);
-                        //Reco_level[i]->SetBinError(k,0);
-                    
-               }
-		
-		
-		
-		
-		c1->cd();
-		
-               
-   		
-                Double_t norm = Rivet_level[i]->Integral()/Gen_level[i]->Integral();
-                Gen_level[i]->Scale(norm);
-                
-                /*Double_t norm2 = Rivet_level[i]->Integral()/Reco_level[i]->Integral();
-                Reco_level[i]->Scale(norm2);*/
-                
+		Gen_level[i] = (TH1D*) Gen_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdjmass");
+		Unfolded_level[i] = (TH1D*) Unfolded_file->Get("HistoOutput" + x[i] + "bin");
                 
                 c1->cd(); 
                 
@@ -115,24 +76,21 @@ void Rivet_Gen_comp(){
                 Gen_level[i]->SetLineWidth(1);
                 //Gen_level[i]->GetXaxis()->SetMoreLogLabels(); //to make the x-axis a bit easier to read and see where the axis starts.
                 //Gen_level[i]->GetXaxis()->SetNoExponent();
-                Gen_level[i]->GetXaxis()->SetRangeUser(x,8000.);
+                //Gen_level[i]->GetXaxis()->SetRangeUser(x,8000.);
                 Gen_level[i]->GetYaxis()->SetLabelFont(43);
                 Gen_level[i]->GetYaxis()->SetLabelSize(12);
                 
-                Gen_level[i]->GetYaxis()->SetRangeUser(1e-3,1e+9);
+                //Gen_level[i]->GetYaxis()->SetRangeUser(1e-3,1e+9);
                 Gen_level[i]->Draw("e1");
                 
-                Rivet_level[i]->SetLineColor(2);
-	        Rivet_level[i]->SetLineWidth(1);
-           	Rivet_level[i]->Draw("e1 same");
+                Unfolded_level[i]->SetLineColor(2);
+	        Unfolded_level[i]->SetLineWidth(1);
+           	Unfolded_level[i]->Draw("e1 same");
            	
-           	/*Reco_level[i]->SetLineColor(3);
-	        Reco_level[i]->SetLineWidth(1);
-           	Reco_level[i]->Draw("e1 same");*/
+           	
            	
            	leg->AddEntry(Gen_level[i],"Gen","l");
-           	leg->AddEntry(Rivet_level[i],"Rivet","l");
-           	//leg->AddEntry(Reco_level[i],"Reco","l");
+           	leg->AddEntry(Unfolded_level[i],"Unfolded","l");
            	leg->Draw();
            	
            	TLatex lt;
@@ -141,9 +99,7 @@ void Rivet_Gen_comp(){
                 lt.DrawLatex(0.77,0.72,eta[i]+" < #eta < "+eta[i+1]);
                 lt.SetTextAlign(12);
            	
-           	//cout << "Rivet_BinNumber: " << Rivet_level[i]->GetSize()-2 << " Gen_BinNumber: " << Gen_level[i]->GetSize()-2 <<  endl;
-           	
-           	Ratio = (TH1D*)Rivet_level[i]->Clone("Ratio");
+           	Ratio = (TH1D*)Unfolded_level[i]->Clone("Ratio");
            	
            	c1->cd(); 
            	
@@ -159,16 +115,10 @@ void Rivet_Gen_comp(){
                 Ratio->Divide(Gen_level[i]);
                 
                 //Cosmetics
-                Ratio->SetLineWidth(1);
-
-                Ratio->SetXTitle("M_{jj}(GeV)");
-                //Ratio->SetXTitle("Leading jet P_{T}(GeV)");
-
-                //Ratio->SetXTitle("M_{jj}(GeV)");
-                Ratio->SetXTitle("Leading jet P_{T}(GeV)");
+                Ratio->SetLineWidth(1);     
+                Ratio->SetXTitle("M_{jj} (GeV)");
                 Ratio->GetYaxis()->SetTitleOffset(0.8);
-                Ratio->SetYTitle("Rivet/Gen");
-                Ratio->GetXaxis()->SetRangeUser(x,8000.);
+                Ratio->SetYTitle("Unfolded/Gen");
                 Ratio->GetYaxis()->CenterTitle();
                 Ratio->SetMarkerColor(kBlue);
                 Ratio->SetLineColor(kBlue);
@@ -187,23 +137,10 @@ void Rivet_Gen_comp(){
                 Ratio->GetXaxis()->SetTitleOffset(1.1);
                 Ratio->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
                 Ratio->GetXaxis()->SetLabelSize(12);
-            
-            
-            
-
 
                 Ratio->Draw("E1HIST");
-                
-                
-	
-                
-                
-           	
-           	
-           	
-                
-                
-                c1->SaveAs("Riv_Gen_comp_"+ eta[i] + "-" + eta[i+1] +".png");
+ 
+                c1->SaveAs("Unfold_MC_"+ eta[i] + "-" + eta[i+1] +".pdf");
                 leg->Clear();
                 c1->Update();
                 
