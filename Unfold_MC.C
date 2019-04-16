@@ -40,7 +40,7 @@ void Unfold_MC(){
     
    
     
-    TFile *Unfolded_file = new TFile("unfoldedSpectraLeadingPtUpJER-CentralBTagging-0.0.root");
+    TFile *Unfolded_file = new TFile("unfoldedSpectra-Tau_0.0.root");
     TFile *Gen_file = new TFile("output-MC-PtHat-1.root");
     
     
@@ -59,7 +59,7 @@ void Unfold_MC(){
     		
  	
 		
-		Gen_level[i] = (TH1D*) Gen_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdjmass");
+		Gen_level[i] = (TH1D*) Gen_file->Get("Standard/Eta_" + eta[i] + "-" + eta[i+1] +"/mc"+"/gen_hdjmass_half");
 		Unfolded_level[i] = (TH1D*) Unfolded_file->Get("HistoOutput" + x[i] + "bin");
                 
                 c1->cd(); 
