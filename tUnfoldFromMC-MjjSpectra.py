@@ -45,7 +45,7 @@ for i in range(0,5):
     #dLevel.Draw()
     #dLevel.Scale(7539.457)
 
-    print "Unfolding Pt Spectra"
+    print "Unfolding dijet mass spectra"
 
     #nbinsGen = 8
     #nbinsRec = 16
@@ -72,9 +72,9 @@ for i in range(0,5):
     ## SET INPUT HERE
     unfold.SetInput(dLevel,0,0,dCovMatrix)
 
-    reguScan= True
+    reguScan= False
     fixedTau = False
-    noReg = False
+    noReg = True
 
     if reguScan:
     ##Regularize Curvature (it is done when the spectrum is rapidly falling)
@@ -94,7 +94,7 @@ for i in range(0,5):
         print "( " + str(unfold.GetChi2A()) + "+" + str(unfold.GetChi2L()) +  ") / " +  str(unfold.GetNdf())
         print "Tau : ", unfold.GetTau()
         
-        folderName = "TestDirectoryToy_"+str(unfold.GetTau())+"y-fineGEN"+label
+        folderName = "ReguScan_"+str(unfold.GetTau())+"y-fineGEN"+label
         subprocess.call(["mkdir",folderName])
         
         l =[0.00,0.00]
@@ -140,16 +140,16 @@ for i in range(0,5):
         unfold.DoUnfold(0.01)
         print "( " + str(unfold.GetChi2A()) + "+" + str(unfold.GetChi2L()) +  ") / " +  str(unfold.GetNdf())
         print "Tau : ", unfold.GetTau()
-        folderName = "tauFineGen_"+str(unfold.GetTau())+"y"+label
+        folderName = "FixedTau_"+str(unfold.GetTau())+"y"+label
         subprocess.call(["mkdir",folderName])
 
     elif noReg :
         unfold.DoUnfold(0.00)
         print "( " + str(unfold.GetChi2A()) + "+" + str(unfold.GetChi2L()) +  ") / " +  str(unfold.GetNdf())
-        folderName = "tauSFDown_"+str(unfold.GetTau())+"_y"+label
+        folderName = "NoReg_"+str(unfold.GetTau())+"_y"+label
         subprocess.call(["mkdir",folderName])
         if (i=='0.0'):
-            subprocess.call(["rm",folderName+"/unfoldedSpectraLeadingPt0.0.root"])
+            subprocess.call(["rm",folderName+"/unfoldedMjjSpectra0.0.root"])
         
     unfoldedHisty1 = unfold.GetOutput("HistoOutput"+str(i)+"bin")
     unfoldedErrory1 = unfold.GetEmatrixInput("unfolding stat error matrix")
@@ -183,7 +183,7 @@ for i in range(0,5):
 
     c3.Print(folderName+"/"+str(i)+"binsCorr"+str(unfold.GetTau())+".pdf")
 
-    f = TFile(folderName+"/unfoldedSpectraLeadingPtUpJER-CentralBTagging-"+str(unfold.GetTau())+".root","update")
+    f = TFile(folderName+"/unfoldedSpectra-Mjj-Tau_"+str(unfold.GetTau())+".root","update")
 
     unfoldedHisty1.Write()
     dLevel.Write("hdjmass_bin"+str(i))
