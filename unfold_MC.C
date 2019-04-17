@@ -5,7 +5,7 @@
 #include <stdio.h>      
 #include <stdlib.h>
 
-void Unfold_MC(){
+void unfold_MC(){
     
     TString eta[] = {
         "0.0",
@@ -140,7 +140,7 @@ void Unfold_MC(){
 
                 Ratio->Draw("E1HIST");
  
-                c1->SaveAs("Unfold_MC_"+ eta[i] + "-" + eta[i+1] +".pdf");
+                c1->SaveAs("MC_unfold_"+ eta[i] + "-" + eta[i+1] +".pdf");
                 leg->Clear();
                 c1->Update();
                 
